@@ -1,4 +1,4 @@
-import { TennisGame } from './TennisGame';
+import {TennisGame} from './TennisGame';
 
 export class TennisGame3 implements TennisGame {
 
@@ -14,44 +14,51 @@ export class TennisGame3 implements TennisGame {
     this.playerTwoName = playerTwoName;
   }
 
-  getScore(): string {
-    let displayedScore: string;
-
-    if (this.doPlayersHaveLessThan40Points()) {
-      displayedScore = this.scoreDisplayName[this.playerOneScorePoints];
-
-      return this.areScoresEqual()
-        ? displayedScore + '-All'
-        : displayedScore + '-' + this.scoreDisplayName[this.playerTwoScorePoints];
-
-    } else {
-      if (this.areScoresEqual()) {
-        return 'Deuce';
-      }
-      displayedScore = this.playerOneScorePoints > this.playerTwoScorePoints ? this.playerOneName : this.playerTwoName;
-      
-      return (((this.playerOneScorePoints - this.playerTwoScorePoints) * (this.playerOneScorePoints - this.playerTwoScorePoints)) === 1) 
-        ? 'Advantage ' + displayedScore
-        : 'Win for ' + displayedScore;
-    }
-  }
-
-  private areScoresEqual() {
-    return this.playerOneScorePoints === this.playerTwoScorePoints
-  }
-
-  private doPlayersHaveLessThan40Points() {
-    // return this.playerOneScorePoints < 3 || this.playerTwoScorePoints < 3
-    return this.playerOneScorePoints < 4
-      && this.playerTwoScorePoints < 4
-      && !(this.playerOneScorePoints + this.playerTwoScorePoints === 6)
-  }
-
   wonPoint(playerName: string): void {
     if (playerName === 'player1')
       this.playerOneScorePoints += 1;
     else
       this.playerTwoScorePoints += 1;
 
+  }
+
+  getScore(): string {
+
+    if (this.isGameDeuceOrAdvantage()) {
+
+      if (this.areScoresEqual()) {
+        return 'Deuce';
+      }
+
+      let playerNameWithAdvantage: string;
+      playerNameWithAdvantage = this.getPlayerNameWithAdvantage();
+
+      return (((this.playerOneScorePoints - this.playerTwoScorePoints) * (this.playerOneScorePoints - this.playerTwoScorePoints)) === 1)
+        ? 'Advantage ' + playerNameWithAdvantage
+        : 'Win for ' + playerNameWithAdvantage;
+
+    } else {
+      let displayedScore: string;
+      displayedScore = this.scoreDisplayName[this.playerOneScorePoints];
+
+      return this.areScoresEqual()
+        ? displayedScore + '-All'
+        : displayedScore + '-' + this.scoreDisplayName[this.playerTwoScorePoints];
+
+    }
+  }
+
+  private isGameDeuceOrAdvantage() {
+    return this.playerOneScorePoints >= 4
+      || this.playerTwoScorePoints >= 4
+      || (this.playerOneScorePoints + this.playerTwoScorePoints) === 6;
+  }
+
+  private areScoresEqual() {
+    return this.playerOneScorePoints === this.playerTwoScorePoints
+  }
+
+  private getPlayerNameWithAdvantage() {
+    return this.playerOneScorePoints > this.playerTwoScorePoints ? this.playerOneName : this.playerTwoName;
   }
 }
