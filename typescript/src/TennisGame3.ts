@@ -1,36 +1,57 @@
 import { TennisGame } from './TennisGame';
 
-
 export class TennisGame3 implements TennisGame {
-  private p2: number = 0;
-  private p1: number = 0;
-  private p1N: string;
-  private p2N: string;
 
-  constructor(p1N: string, p2N: string) {
-    this.p1N = p1N;
-    this.p2N = p2N;
+  private scoreDisplayName: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
+
+  private playerOneScorePoints: number = 0;
+  private playerTwoScorePoints: number = 0;
+  private playerOneName: string;
+  private playerTwoName: string;
+
+  constructor(playerOneName: string, playerTwoName: string) {
+    this.playerOneName = playerOneName;
+    this.playerTwoName = playerTwoName;
   }
 
   getScore(): string {
-    let s: string;
-    if (this.p1 < 4 && this.p2 < 4 && !(this.p1 + this.p2 === 6)) {
-      const p: string[] = ['Love', 'Fifteen', 'Thirty', 'Forty'];
-      s = p[this.p1];
-      return (this.p1 === this.p2) ? s + '-All' : s + '-' + p[this.p2];
+    let displayedScore: string;
+
+    if (this.doPlayersHaveLessThan40Points()) {
+      displayedScore = this.scoreDisplayName[this.playerOneScorePoints];
+
+      return this.areScoresEqual()
+        ? displayedScore + '-All'
+        : displayedScore + '-' + this.scoreDisplayName[this.playerTwoScorePoints];
+
     } else {
-      if (this.p1 === this.p2)
+      if (this.areScoresEqual()) {
         return 'Deuce';
-      s = this.p1 > this.p2 ? this.p1N : this.p2N;
-      return (((this.p1 - this.p2) * (this.p1 - this.p2)) === 1) ? 'Advantage ' + s : 'Win for ' + s;
+      }
+      displayedScore = this.playerOneScorePoints > this.playerTwoScorePoints ? this.playerOneName : this.playerTwoName;
+      
+      return (((this.playerOneScorePoints - this.playerTwoScorePoints) * (this.playerOneScorePoints - this.playerTwoScorePoints)) === 1) 
+        ? 'Advantage ' + displayedScore
+        : 'Win for ' + displayedScore;
     }
+  }
+
+  private areScoresEqual() {
+    return this.playerOneScorePoints === this.playerTwoScorePoints
+  }
+
+  private doPlayersHaveLessThan40Points() {
+    // return this.playerOneScorePoints < 3 || this.playerTwoScorePoints < 3
+    return this.playerOneScorePoints < 4
+      && this.playerTwoScorePoints < 4
+      && !(this.playerOneScorePoints + this.playerTwoScorePoints === 6)
   }
 
   wonPoint(playerName: string): void {
     if (playerName === 'player1')
-      this.p1 += 1;
+      this.playerOneScorePoints += 1;
     else
-      this.p2 += 1;
+      this.playerTwoScorePoints += 1;
 
   }
 }
