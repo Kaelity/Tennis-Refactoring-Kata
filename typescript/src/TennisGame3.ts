@@ -30,10 +30,9 @@ export class TennisGame3 implements TennisGame {
         return 'Deuce';
       }
 
-      let playerNameWithAdvantage: string;
-      playerNameWithAdvantage = this.getPlayerNameWithAdvantage();
+      let playerNameWithAdvantage = this.getPlayerNameWithAdvantage();
 
-      return (((this.playerOneScorePoints - this.playerTwoScorePoints) * (this.playerOneScorePoints - this.playerTwoScorePoints)) === 1)
+      return (this.foo() === 1)
         ? 'Advantage ' + playerNameWithAdvantage
         : 'Win for ' + playerNameWithAdvantage;
 
@@ -46,6 +45,10 @@ export class TennisGame3 implements TennisGame {
         : displayedScore + '-' + this.scoreDisplayName[this.playerTwoScorePoints];
 
     }
+  }
+
+  private foo() {
+    return (Math.abs(this.playerOneScorePoints - this.playerTwoScorePoints));
   }
 
   private isGameDeuceOrAdvantage() {
